@@ -1,6 +1,6 @@
 package com.example.testSoft.domain;
 
-import com.example.testSoft.util.HasId;
+import com.example.testSoft.utils.HasId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +11,7 @@ import org.hibernate.annotations.BatchSize;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,12 +45,11 @@ public class User extends BaseEntity implements HasId, Serializable {
     @Column(name = "enabled")
     private boolean enabled = true;
 
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role")
-    @ElementCollection(fetch = FetchType.EAGER)
-    @BatchSize(size = 200)
-    private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
     @Override
     public void setId(long id) {

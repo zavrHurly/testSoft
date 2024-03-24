@@ -1,47 +1,23 @@
 package com.example.testSoft.services;
 
-import com.example.testSoft.AuthUser;
 import com.example.testSoft.domain.User;
-import com.example.testSoft.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import com.example.testSoft.dto.UserDto;
 
-import java.util.Optional;
+import java.util.List;
 
-@Service
-@Slf4j
-public class UserService {
+public interface UserService {
 
-    private final UserRepository userRepository;
+    User register(User user);
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    List<UserDto> getAll();
 
-    public Optional<User> findById(long id) {
-        return userRepository.findById(id);
-    }
+    User findByUsername(String username);
 
-    public User findByUsername(String username) {
-        User result = userRepository.findByName(username);
-        log.info("IN findByUsername - user: {} found by username: {}", result, username);
-        return result;
-    }
+    User findById(Long id);
 
-    public User save(User user){
-        return userRepository.save(user);
-    }
+    void delete(Long id);
 
-    public void deleteUser(long id){ userRepository.deleteById(id);}
+    User update(User user, long id);
 
-    public void update(User user, long id){
-        User userFromDB = userRepository.getById(id);
-        userFromDB.updateUser(user);
-        userRepository.save(userFromDB);
-    }
+    User create(User user);
 }

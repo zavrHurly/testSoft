@@ -1,7 +1,6 @@
 package com.example.testSoft.utils;
 
 import com.example.testSoft.error.IllegalRequestDataException;
-import com.example.testSoft.util.HasId;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

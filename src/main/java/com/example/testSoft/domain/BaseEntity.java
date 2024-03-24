@@ -1,6 +1,6 @@
 package com.example.testSoft.domain;
 
-import com.example.testSoft.util.HasId;
+import com.example.testSoft.utils.HasId;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;

@@ -14,9 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -48,11 +48,12 @@ public class JwtTokenProvider {
         Claims claims = (Claims) Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
 
-        LocalDateTime validity = LocalDateTime.now().plusSeconds(validityInMilliseconds / 1000);
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()//
                 .setClaims(claims)//
-                .setIssuedAt(LocalDateTime.now())//
+                .setIssuedAt(now)//
                 .setExpiration(validity)//
                 .signWith(SignatureAlgorithm.HS256, secret)//
                 .compact();
@@ -64,7 +65,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(secret).build().parseSignedClaims(token).getPayload().getSubject();
     }
 
     public String resolveToken(HttpServletRequest req) {
@@ -77,9 +78,9 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secret).build().parseSignedClaims(token);
 
-            if (claims.getBody().getExpiration().before(new Date())) {
+            if (claims.getPayload().getExpiration().before(new Date())) {
                 return false;
             }
 

@@ -1,4 +1,4 @@
-package com.example.testSoft.util;
+package com.example.testSoft.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.util.Assert;
